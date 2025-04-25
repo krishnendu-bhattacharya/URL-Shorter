@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        /* Light Mode Styles */
+        body.light-mode {
+            background: linear-gradient(to right, #fe9708, #fcb69f);
+            color: #333;
+            font-size: 16px;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: #ed1111;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 700px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        /* Header Text (URL Shortener) Color Change */
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            transition: color 0.3s ease-in-out;
+        }
+
+        /* Change color in Dark Mode */
+        body.dark-mode h1 {
+            color: #f31010; /* White color in dark mode */
+        }
+
+        /* Light Mode Text Color */
+        body.light-mode h1 {
+            color: #1d6620; /* Green color in light mode */
+        }
+
+        /* Label Styling */
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+        }
+
+        /* Light Mode Label Color */
+        body.light-mode label {
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Dark color for light mode */
+        }
+
+        /* Dark Mode Label with Shadow */
+        body.dark-mode label {
+            color: #0e0e0e; /* White color for dark mode */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Add shadow to text */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 25px;
+        }
+
+        .result a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .result a:hover {
+            color: #45a049;
+        }
+
+        /* Button to Toggle Theme */
+        .theme-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 50px;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle .slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle input:checked + .slider {
+            transform: translateX(30px);
+            background-color: #4CAF50;
+        }
+
+        .theme-toggle input:checked + .slider:before {
+            content: '🌙';
+            position: absolute;
+            top: 0;
+            left: 5px;
+            font-size: 16px;
+            color: white;
+        }
+
+        .theme-toggle .slider:before {
+            content: '🌞';
+            position: absolute;
+            top: 0;
+            left: 5px;
+            font-size: 16px;
+            color: #4CAF50;
+        }
+
+        /* Background Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 60px auto;
+            }
+
+            input[type="text"] {
+                padding: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+            }
+        }
+
+        /* New Styling for Image in Light Mode */
+        .light-mode .container {
+            background-image: url('https://your-image-url-here.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <form method="POST" action="/url">
+            <label for="url">Enter Your Original URL</label>
+            <input type="text" id="url" name="url" placeholder="https://example.com" required>
+            <button type="submit">Generate</button>
+        </form>
+
+        <div class="result">
+            <% if (id) { %>
+                <p>Your Shortened URL: <a href="/<%= id %>" target="_blank">localhost:8001/<%= id %></a></p>
+            <% } %>
+            <p><%= message %></p>
+        </div>
+    </div>
+
+    <div class="theme-toggle-container">
+        <label class="theme-toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+        });
+    </script>
+</body>
+</html>
